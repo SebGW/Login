@@ -3,10 +3,12 @@ class UserView extends User{
 
     // Login.php
     public function showResults() {
-        $this->Checklogin();
+        $this->checkLogin();
     }
 
-
+    public function ShowSetUser() {
+        $this->setUser();
+    }
 
 
 
