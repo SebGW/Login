@@ -28,78 +28,49 @@ class User extends Dbh {
             exit();
         }
 
-
-
-        // $hashedPW = password_hash($this->password, PASSWORD_DEFAULT);
-
-
-        $sql = "SELECT * FROM users WHERE email = ? AND pw = ?";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam('s', $this->email);
-        $stmt->bindParam('s', $this->password);
-        $stmt->execute([$this->email, $this->password]);
-
-
-
-
-
-        // Check hash password match
-        // Kommer tilbage til dette punkt senere!
-        // Jeg vil gerne have at password_hash algo skal være på PASSWORD_DEFAULT
-        // ps: Er lidt i tvivl om password_verify returner som True / False eller som nummer?
-        // Besvar gerne dette!
-
-        while ($row = $stmt->fetch()) {
-            // $userID = $row['id'];
-            $id = $row['id'];
-            $pw = $row['pw'];
-            // $username = $row['firstname'];
-        }
-
-
-        // DETTE ER INPUT FRA BRUGER
-        // $this->password
-
-        // DETTE ER PASSWORD I DATABASEN
-        // echo $pw;
-
-        $hashedPW = password_hash($this->password, PASSWORD_DEFAULT);
-        echo password_verify($pw, $hashedPW);
-
-        // DOG ER JEG I TVIVL OM HVORDAN DEN RETURNER?
-
-        exit();
+          //Query sql til at finde den bruger med email og hashed password.
+          $sql = "SELECT * FROM users WHERE email = :email";
+          $stmt = $this->connect()->prepare($sql);
+          $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
+          $stmt->execute();
+          $pw = "";
+          $id = 0;
+          while ($row = $stmt->fetch()) {
+              $id = $row['id'];
+              $pw = $row['pw'];
+              // $username = $row['firstname'];
+          }
+          $verify = password_verify($this->password,$pw);
+          echo $verify;
+          if(!$verify) {
+              echo 'Forkert login!';
+              exit();
+          }
+          $_SESSION['id'] = $id;
+          header("Location: index.php");
+      }
 
 
 
+    // protected function checkUser($stmt, $id) {
+    //     // $stmt->rowCount();
+    //     if (!$stmt->rowCount() == 1) {
+    //         echo 'Eksisterer ikke!';
+    //         exit();
+    //     }
+    //     else if ($stmt->rowCount() == 1){
+    //         echo 'Eksisterer!';
+    //         echo '<br>';
+    //         // session_start();
+    //         $_SESSION['id'] = $id;
+    //         header("Location: index.php?id=" . $id);
+    //     }
+    //     else {
+    //         echo 'Der opstod en fejl!';
+    //         exit();
+    //     }
 
-
-        // Check if user exist
-        $checkUser = new User($this->email, $this->password);
-        $checkUser->checkUser($stmt, $id);
-
-        return $stmt;
-    }
-    
-    protected function checkUser($stmt, $id) {
-        // $stmt->rowCount();
-        if (!$stmt->rowCount() == 1) {
-            echo 'Eksisterer ikke!';
-            exit();
-        }
-        else if ($stmt->rowCount() == 1){
-            echo 'Eksisterer!';
-            echo '<br>';
-            // session_start();
-            $_SESSION['id'] = $id;
-            header("Location: index.php?id=" . $id);
-        }
-        else {
-            echo 'Der opstod en fejl!';
-            exit();
-        }
-
-    }
+    // }
     
 
 
@@ -111,6 +82,12 @@ class User extends Dbh {
     
     // Index.php
     protected function getUsers() {
+        
+
+
+
+
+        // Få fat i alle brugere
         $sql = "SELECT * FROM users";
         $stmt = $this->connect()->query($sql);
         while ($row = $stmt->fetch()) {
@@ -118,6 +95,10 @@ class User extends Dbh {
             print_r($row);
         }
         return $stmt;
+
+
+
+
     }
 
 
@@ -133,9 +114,9 @@ class User extends Dbh {
 
     // Hash.php
     protected function setUser() {
-        $hashPW = password_hash("sebseb", PASSWORD_DEFAULT);
+        $hashPW = password_hash("sebseb123", PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`, `pw`) VALUES ('Seb2', '22', 'noget@gmail.com', '$hashPW')";
+        $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`, `pw`) VALUES ('Sebastian', 'Willemoes', 'softsebdk@gmail.com', '$hashPW')";
         $stmt = $this->connect()->query($sql);
         return $stmt;
         // $stmt->bindParam('s', );

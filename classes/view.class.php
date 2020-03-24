@@ -6,16 +6,18 @@ class UserView extends User{
         $this->checkLogin();
     }
 
+
+    // Hash.php
     public function ShowSetUser() {
         $this->setUser();
     }
 
 
 
-    // public function showUsers() {
-    // $this->getUsers();
+    public function showUsers() {
+    $this->getUsers();
 
-    // }
+    }
 
     
 }

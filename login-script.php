@@ -11,5 +11,5 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $validLogin = new UserView($email, $pw);
     $validLogin->showResults();
 } else {
-    header("Location: login.php?access=no");
+    header("Location: login.php?access=none");
 }

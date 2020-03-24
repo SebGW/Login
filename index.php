@@ -1,13 +1,16 @@
 <?php
-// session_start();
 include 'includes/header.php';
 
 if (isset($_SESSION['id'])) {
     echo $_SESSION['id'];
+
+
+
+
 }
 else {
     // echo "Not set!";
-    header("Location: login.php?login=no");
+    header("Location: login.php?login=none");
 }
 
 
