@@ -5,14 +5,16 @@ class User extends Dbh {
     private $password;
 
     // Constructer
-    public function __construct($email, $password) {
-        $this->email = $email;
-        $this->password = $password;
-    }
+    // public function __construct($email, $password) {
+    //     $this->email = $email;
+    //     $this->password = $password;
+    // }
 
     
     //Login.php
-    protected function checkLogin() {
+    protected function checkLogin($email, $password) {
+        $this->email = $email;
+        $this->password = $password;
 
 
         if(empty($this->email)) {
@@ -37,18 +39,63 @@ class User extends Dbh {
           $id = 0;
           while ($row = $stmt->fetch()) {
               $id = $row['id'];
+              $firstname = $row['firstname'];
+              $lastname = $row['lastname'];
+              $email = $row['email'];
               $pw = $row['pw'];
-              // $username = $row['firstname'];
           }
           $verify = password_verify($this->password,$pw);
-          echo $verify;
+        //   echo $verify;
           if(!$verify) {
               echo 'Forkert login!';
               exit();
           }
-          $_SESSION['id'] = $id;
+
+        //   $_SESSION['CurrentUser'] = (object) [
+        //     'id' => $id,
+        //     'firstname' => $username,
+        //     'lastname' => $lastname,
+        //     'email' => $email,
+        //     'pw' => $pw
+
+        //   ];
+        $sessionArray = array(
+            'id' => $id,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+            'pw' => $pw
+        );
+        $_SESSION['CurrentUser'] = $sessionArray;
+
+
+        //   $_SESSION['id'] = $id;
+        //   $_SESSION['firstname'] = $username;
+        //   $_SESSION['lastname'] = $lastname;
+        //   $_SESSION['email'] = $email;
+        //   $_SESSION['password'] = $pw;
           header("Location: index.php");
       }
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,20 +128,45 @@ class User extends Dbh {
     
     
     // Index.php
+    // protected function getUserInfo($id) {
+    //     // $sql = "SELECT * FROM users WHERE id = :id";
+    //     $sql = "SELECT * FROM users WHERE id = '$id'";
+    //     $stmt = $this->connect()->query($sql);
+    //     return $stmt;
+    // }
+    
+    
+    
+    
+    // Index.php
     protected function getUsers() {
-        
-
-
-
 
         // Få fat i alle brugere
         $sql = "SELECT * FROM users";
         $stmt = $this->connect()->query($sql);
         while ($row = $stmt->fetch()) {
             // echo $row['firstname'] . '<br>';
-            print_r($row);
+            // print_r($row);
+            echo 'Navn: ' . ucfirst($row['firstname']) . ' ' . ucfirst($row['lastname']) . '<br>';
         }
         return $stmt;
+    }
+
+
+
+    // Få fat i brugerens profile billedet
+    protected function getUserImg($userID) {
+        $sql = "SELECT * FROM profile_img WHERE user_id = $userID";
+        $stmt = $this->connect()->query($sql);
+
+        if (!$stmt->rowCount() == 1) {
+            echo '<img src="profile/uploads/user-pic.png" alt="" class="img-thumbnail profile-img">';
+        }
+
+        while ($row = $stmt->fetch()) {
+            $srcName = $row['name'];
+            echo '<img src="profile/' . $srcName . '" alt="' . $srcName . '" class="img-thumbnail profile-img">';
+        }
 
 
 
@@ -114,15 +186,34 @@ class User extends Dbh {
 
     // Hash.php
     protected function setUser() {
-        $hashPW = password_hash("sebseb123", PASSWORD_DEFAULT);
+        $hashPW = password_hash("johndoe123", PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`, `pw`) VALUES ('Sebastian', 'Willemoes', 'softsebdk@gmail.com', '$hashPW')";
+        $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`, `pw`) VALUES ('John', 'Doe', 'johndoe@gmail.com', '$hashPW')";
         $stmt = $this->connect()->query($sql);
         return $stmt;
-        // $stmt->bindParam('s', );
     }
 
 
+
+    // Profile.php
+    // protected function setProfileImg() {
+    //     $sql = "INSERT INTO profile_img (`name`, `user_id`, `location`) VALUES ('crash.php', '7', 'img/')";
+    //     $stmt = $this->connect()->query($sql);
+    //     return $stmt;
+    // }
+
+
+
+
+
+    // upload-img.php
+    protected function uploadProfileImg($imageName, $userID) {
+        $sql = "INSERT INTO profile_img (name, user_id, location) VALUES (:name, :user_id, 'uploads/')";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':name', $imageName);
+        $stmt->bindParam(':user_id', $userID);
+        $stmt->execute();
+    }
 
 
 

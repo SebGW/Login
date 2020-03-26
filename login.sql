@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2020 at 02:49 PM
+-- Generation Time: Mar 26, 2020 at 08:52 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.3
 
@@ -25,6 +25,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `profile_img`
+--
+
+CREATE TABLE `profile_img` (
+  `id` int(11) NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `user_id` int(11) NOT NULL COMMENT 'Bruger id (Bruges til at genkende brugerens billedet)',
+  `location` varchar(250) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -41,13 +54,18 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `pw`) VALUES
-(1, 'Sebastian', 'G. Willemoes', 'softsebdk@gmail.com', 'Sebseb123'),
-(3, 'Mark', 'Knudsen', 'mark@gmail.com', '$2y$10$wcN.T9o2fiWeWpXkaAXwC.QHYH2jCE4fxmVLmwfboZ4lY5q4hKWyW'),
-(4, 'John', 'Doe', 'johndoe@gmail.com', 'johnjohn123');
+(7, 'Sebastian', 'Willemoes', 'softsebdk@gmail.com', '$2y$10$MNDcEjqp0oNNhC.MMQxLXuynVkVAbYBqej7TnoOV6gOt1yDRcUQVu'),
+(10, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$AFnGbfPddA3pC2DVu/i4lelM91I6Az5Pc07rQsFiQS0tY/dmRQy4.');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `profile_img`
+--
+ALTER TABLE `profile_img`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -60,10 +78,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `profile_img`
+--
+ALTER TABLE `profile_img`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

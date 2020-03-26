@@ -8,10 +8,24 @@ body {
     font-family: sans-serif;
 }
 
-.container {
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50vh;
     width: 100%;
+}
+
+.login-container2{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profile-img {
+    height: auto;
+    width: 50px;
+    max-width: 100%;
+    padding: .1rem;
 }

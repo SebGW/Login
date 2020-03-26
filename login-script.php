@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = $_POST['email'];
     $pw = $_POST['pw'];
 
-    $validLogin = new UserView($email, $pw);
-    $validLogin->showResults();
+    $validLogin = new UserView();
+    $validLogin->showLoginResult($email, $pw);
 } else {
     header("Location: login.php?access=none");
 }
