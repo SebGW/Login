@@ -1,6 +1,16 @@
 <?php
 class UserView extends User{
 
+
+    // Register.php
+    public function setUserSignUp($firstname, $lastname, $email, $password) {
+        $this->userSignUp($firstname, $lastname, $email, $password);
+    }
+
+
+
+
+
     // Login.php
     public function showLoginResult($email, $password) {
         $this->checkLogin($email, $password);
@@ -23,11 +33,6 @@ class UserView extends User{
     }
 
 
-    // public function showUserInfo($id) {
-    //     $this->getUserInfo($id);
-    // }
-
-
     public function showUsers() {
         $this->getUsers();
     }
@@ -39,18 +44,7 @@ class UserView extends User{
 
 
     
-    // Hash.php
-    public function ShowSetUser() {
-        $this->setUser();
-    }
-    
 
-
-
-    // Profile.php
-    // public function showSetProfileImg() {
-    //     $this->setProfileImg();
-    // }
 
 
     // upload-img.php
@@ -58,4 +52,8 @@ class UserView extends User{
         $this->uploadProfileImg($imageName, $userID);
     }
 
+    // Delete-img.php
+    public function setdeleteProfileImg($userID) {
+        $this->deleteProfileImg($userID);
+    }
 }

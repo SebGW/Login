@@ -10,6 +10,46 @@ class User extends Dbh {
     //     $this->password = $password;
     // }
 
+        // register.php
+        protected function userSignUp($firstname, $lastname, $email, $password) {
+            if (empty($firstname)) {
+                echo 'Mangler Fornavn';
+            }
+            else if (empty($lastname)) {
+                echo 'Mangler efternavn';
+            }
+            else if (empty($email)) {
+                echo 'Mangler E-mail adresse';
+            }
+            else if (empty($password)) {
+                echo 'Mangler Adgangskode';
+            }
+            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo 'Dette er ikke en E-mail adresse';
+            }
+            // else if (!preg_match()) {
+
+            // }
+            // Regular Expression
+            // $pattern = "";
+            // preg_match
+
+            $hashPW = password_hash($password, PASSWORD_DEFAULT);
+            
+
+            $sql = "INSERT INTO users (firstname, lastname, email, pw) VALUES (:firstname, :lastname, :email, :pw)";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':firstname', $firstname);
+            $stmt->bindParam(':lastname', $lastname);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':pw', $hashPW);
+            $stmt->execute();
+
+            header("Location login.php?user=created");
+        }
+
+
+
     
     //Login.php
     protected function checkLogin($email, $password) {
@@ -45,7 +85,6 @@ class User extends Dbh {
               $pw = $row['pw'];
           }
           $verify = password_verify($this->password,$pw);
-        //   echo $verify;
           if(!$verify) {
               echo 'Forkert login!';
               exit();
@@ -67,74 +106,13 @@ class User extends Dbh {
             'pw' => $pw
         );
         $_SESSION['CurrentUser'] = $sessionArray;
-
-
-        //   $_SESSION['id'] = $id;
-        //   $_SESSION['firstname'] = $username;
-        //   $_SESSION['lastname'] = $lastname;
-        //   $_SESSION['email'] = $email;
-        //   $_SESSION['password'] = $pw;
           header("Location: index.php");
       }
 
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // protected function checkUser($stmt, $id) {
-    //     // $stmt->rowCount();
-    //     if (!$stmt->rowCount() == 1) {
-    //         echo 'Eksisterer ikke!';
-    //         exit();
-    //     }
-    //     else if ($stmt->rowCount() == 1){
-    //         echo 'Eksisterer!';
-    //         echo '<br>';
-    //         // session_start();
-    //         $_SESSION['id'] = $id;
-    //         header("Location: index.php?id=" . $id);
-    //     }
-    //     else {
-    //         echo 'Der opstod en fejl!';
-    //         exit();
-    //     }
-
-    // }
     
 
 
 
-
-
-
-    
-    
-    // Index.php
-    // protected function getUserInfo($id) {
-    //     // $sql = "SELECT * FROM users WHERE id = :id";
-    //     $sql = "SELECT * FROM users WHERE id = '$id'";
-    //     $stmt = $this->connect()->query($sql);
-    //     return $stmt;
-    // }
-    
     
     
     
@@ -153,57 +131,23 @@ class User extends Dbh {
     }
 
 
-
+    // Index.php
     // Få fat i brugerens profile billedet
     protected function getUserImg($userID) {
         $sql = "SELECT * FROM profile_img WHERE user_id = $userID";
         $stmt = $this->connect()->query($sql);
 
         if (!$stmt->rowCount() == 1) {
-            echo '<img src="profile/uploads/user-pic.png" alt="" class="img-thumbnail profile-img">';
+            // echo '<img src="profile/uploads/user-pic.png" alt="Mangler billedet" class="img-thumbnail profile-img">';
+            echo '<img src="/login/profile/uploads/user-pic.png" alt="Mangler billedet" class="img-thumbnail profile-img">';
         }
 
         while ($row = $stmt->fetch()) {
             $srcName = $row['name'];
-            echo '<img src="profile/' . $srcName . '" alt="' . $srcName . '" class="img-thumbnail profile-img">';
+            // echo '<img src="profile/' . $srcName . '" alt="' . $srcName . '" class="img-thumbnail profile-img">';
+            echo '<img src="/login/profile/' . $srcName . '" alt="' . $srcName . '" class="img-thumbnail profile-img">';
         }
-
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    // Hash.php
-    protected function setUser() {
-        $hashPW = password_hash("johndoe123", PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO `users`(`firstname`, `lastname`, `email`, `pw`) VALUES ('John', 'Doe', 'johndoe@gmail.com', '$hashPW')";
-        $stmt = $this->connect()->query($sql);
-        return $stmt;
-    }
-
-
-
-    // Profile.php
-    // protected function setProfileImg() {
-    //     $sql = "INSERT INTO profile_img (`name`, `user_id`, `location`) VALUES ('crash.php', '7', 'img/')";
-    //     $stmt = $this->connect()->query($sql);
-    //     return $stmt;
-    // }
-
-
-
 
 
     // upload-img.php
@@ -215,6 +159,14 @@ class User extends Dbh {
         $stmt->execute();
     }
 
+
+    // Delete-img.php
+    protected function deleteProfileImg($userID){
+        $sql = "DELETE FROM profile_img WHERE user_id = :user_id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':user_id', $userID);
+        $stmt->execute();
+    }
 
 
 

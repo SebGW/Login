@@ -6,10 +6,11 @@ include '../classes/view.class.php';
 
 
 ?>
-
+<link rel="stylesheet" href="../styles/style.css">
 
 <?php
-echo '<img src="../img/crash.png" alt="Bruger" height="50" width="50">';
+$showUserImg = new UserView();
+$showUserImg->showUserImg($_SESSION['CurrentUser']['id']);
 ?>
 
 
@@ -20,18 +21,16 @@ echo '<img src="../img/crash.png" alt="Bruger" height="50" width="50">';
 <input type="submit" name="submit" value="Upload fil">
 </form>
 
+<br>
 
 
+<form action="delete-img.php" method="POST">
+<input type="submit" name="deleteFile" value="Slet">
+</form>
 
 <br>
 
 <a href="../index.php">Tilbage</a>
-
-<?php
-$setProfileImg = new UserView();
-// $setProfileImg->showSetProfileImg();
-?>
-
 
 
 <?php
